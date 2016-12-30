@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.gerald.secondtest.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/stat_sys_phone_call_forward"
+        android:id="@+id/callButtImg"
+        android:layout_alignBottom="@+id/buttonTouchMe"
+        android:layout_toEndOf="@+id/buttonTouchMe" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World! \nBite me please"
+        android:textStyle="normal|bold"
+        android:textSize="18sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="97dp"
+        android:id="@+id/SaludoText" />
+
+    <Button
+        android:text="Touch me gently"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonTouchMe"
+        android:contentDescription="Un boton para jugar sucio"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:hint="@android:string/copyUrl"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"
+        android:layout_below="@+id/callButtImg"
+        android:layout_alignStart="@+id/buttonTouchMe"
+        android:layout_marginTop="78dp"
+        android:id="@+id/phoneEditText" />
+
+</RelativeLayout>
