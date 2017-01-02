@@ -13,6 +13,12 @@
     tools:context="com.example.gerald.secondtest.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <Button
+        android:text="My Map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonMap" />
+
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

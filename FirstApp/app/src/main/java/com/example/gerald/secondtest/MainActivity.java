@@ -1,6 +1,7 @@
 package com.example.gerald.secondtest;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Path;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -85,6 +87,24 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+    Button mapa= (Button) this.findViewById(R.id.buttonMap);
+    mapa.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent goToMap = new Intent(getApplicationContext(),MapsActivity.class);//pq estamos en un objeto View sino seria el this
+                    startActivity(goToMap);
+
+
+
+                }
+            }
+    );
+
+
+
 
     }
 
