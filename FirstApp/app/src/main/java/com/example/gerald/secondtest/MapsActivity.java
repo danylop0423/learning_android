@@ -3,13 +3,18 @@ package com.example.gerald.secondtest;
 import android.*;
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,7 +55,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         milocManager= (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        managedPermissions();
+        if (!milocManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        else
+            managedPermissions();
         marker=mMap.addMarker(new MarkerOptions().position(location).title("I'm here"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
     }
@@ -74,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void managedPermissions (){
+    private void managedPermissions (){
 
         LocationListener myListener= new LocationListener(){
             public void onLocationChanged(Location myLocation){
@@ -90,18 +98,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             public void onProviderDisabled(String provider){
+                if(provider.contains("gps")){
+                    Toast.makeText(getApplicationContext(), "GPS is off", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+
+
             }
 
             public void onProviderEnabled(String provider){
+
             }
         } ;
 
+
         // if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,android.os.Process.myPid(),android.os.Process.myUid())== PackageManager.PERMISSION_GRANTED)
-        if(ActivityCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+        if(ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
             //coordenadas = milocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             milocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,myListener);
-        else
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
 
 
 }
