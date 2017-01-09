@@ -1,5 +1,13 @@
 package com.example.gerald.secondtest;
 
+import android.*;
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -8,11 +16,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private LatLng location = new LatLng(-34, 151);
+    private LocationManager milocManager=null;
+    private Marker marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +49,62 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        milocManager= (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        managedPermissions();
+        marker=mMap.addMarker(new MarkerOptions().position(location).title("I'm here"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
     }
+
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        managedPermissions();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    public void managedPermissions (){
+
+        LocationListener myListener= new LocationListener(){
+            public void onLocationChanged(Location myLocation){
+
+                location = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                marker.setPosition(location);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras){
+
+            }
+
+            public void onProviderDisabled(String provider){
+            }
+
+            public void onProviderEnabled(String provider){
+            }
+        } ;
+
+        // if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,android.os.Process.myPid(),android.os.Process.myUid())== PackageManager.PERMISSION_GRANTED)
+        if(ActivityCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+            //coordenadas = milocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            milocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,myListener);
+        else
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+
+}
+
+
 }
