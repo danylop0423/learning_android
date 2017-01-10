@@ -1,4 +1,4 @@
-package com.example.gerald.secondtest;
+package com.example.gerald.secondtest.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -20,14 +20,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.gerald.secondtest.listeners.mainListeners.FloatingButtonListener;
+import com.example.gerald.secondtest.listeners.mainListeners.GoToAnActivityListener;
+import com.example.gerald.secondtest.listeners.mainListeners.TouchMeListener;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView saludotext;
-    ImageButton callMeImg;
-    EditText phonetxt;
+    private TextView saludotext;
+    private ImageButton callMeImg;
+    private EditText phonetxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +40,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Gerky code and Gerky listeners
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(new FloatingButtonListener());
 
-        //TODO mi creacion
-        saludotext = (TextView) findViewById(R.id.SaludoText);
+        saludotext = (TextView) findViewById(R.id.SaludoText);//habría que crear otra clase listener para el botón de las llamadas
         /*callMeImg = (ImageButton) findViewById(R.id.callButtImg);
         callMeImg.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -58,53 +56,11 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
         Button touchMeButton = (Button) findViewById(R.id.buttonTouchMe);
-        touchMeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String direccion = saludotext.getText().toString();
-                //direccion = direccion.split("\n");
-                /*Path newLink = "www.google.com";
-                Path target = "estoEsUnamierda";
-                try {
-                    MediaStore.Files.createSymbolicLink(newLink, target);
-                } catch (IOException x) {
-                    System.err.println(x);
-                } catch (UnsupportedOperationException x) {
-                    // Some file systems do not support symbolic links.
-                    System.err.println(x);
-                }*/
-                try {
-                    //URL buscaBusca = new URL("https://www.google.es/search?q=" + direccion);
-                    Uri uri = Uri.parse("https://www.google.es/search?q=" + direccion);
-                    Intent intent= new Intent(Intent.ACTION_VIEW,uri);
-                    startActivity(intent);
+        touchMeButton.setOnClickListener(new TouchMeListener(saludotext,this));
 
 
-                }
-                catch (Exception e) {
-                    System.err.println("Esa dirección no existe cachondo");
-                }
-
-            }
-        });
-
-
-    Button mapa= (Button) this.findViewById(R.id.buttonMap);
-    mapa.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent goToMap = new Intent(getApplicationContext(),MapsActivity.class);//pq estamos en un objeto View sino seria el this
-                    startActivity(goToMap);
-
-
-
-                }
-            }
-    );
-
-
-
+        Button mapa= (Button) this.findViewById(R.id.buttonMap);
+        mapa.setOnClickListener(new GoToAnActivityListener(this));
 
     }
 
